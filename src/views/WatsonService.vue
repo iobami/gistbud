@@ -111,6 +111,7 @@ export default {
   }
   .chat-box-in {
     margin-top: 40px;
+    position: relative;
   }
   .chat-box-top {
     padding: 12px 12px 10px 24px;
@@ -159,13 +160,102 @@ export default {
     text-align: center;
   }
   .chat-box-bottom {
-    position: fixed;
-    bottom: 63px;
-    /*background-color: #d0d4db;*/
+    position: absolute;
+    /*bottom: 63px;*/
     height: 68px;
-    margin-left: 25px;
-    margin-right: 25px;
-    width: 51%;
+    width: 100%;
     padding: 5px;
+  }
+  .chat-box-bottom form {
+    width: 94%;
+    margin: auto;
+  }
+  @media only screen and (max-width: 1190px) {
+    .chat-box-out {
+      width: 65%;
+    }
+    .chat-box-watson {
+      width: 75%;
+    }
+    .chat-box-user {
+      width: 75%;
+    }
+  }
+  @media only screen and (max-width: 1015px) {
+    .chat-box-out {
+      width: 85%;
+    }
+    .chat-box-watson {
+      width: 80%;
+    }
+    .chat-box-user {
+      width: 80%;
+    }
+  }
+  @media only screen and (max-width: 675px) {
+    .chat-box-out {
+      width: 95%;
+    }
+    .chat-box-watson {
+      width: 82%;
+    }
+    .chat-box-user {
+      width: 82%;
+    }
+  }
+  @media only screen and (min-width: 444px) and (max-width: 574px) {
+    .chat-box-watson {
+      width: 85%;
+    }
+    .chat-box-user {
+      width: 85%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 87%;
+    }
+  }
+  @media only screen and (min-width: 295px) and (max-width: 444px) {
+    .chat-box-watson {
+      width: 87%;
+    }
+    .chat-box-user {
+      width: 87%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 80%;
+    }
+  }
+  @media only screen and (max-width: 295px) {
+    .chat-box-watson {
+      width: 90%;
+    }
+    .chat-box-user {
+      width: 88%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 75%;
+    }
+  }
+  @media only screen and (max-width: 245px) {
+    .chat-box .watson {
+      margin: 6px;
+      width: 87%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 72%;
+    }
+  }
+  @media only screen and (max-width: 225px) {
+    .chat-box-watson {
+      width: 94%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 72%;
+    }
   }
 </style>

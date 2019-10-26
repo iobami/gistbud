@@ -23,22 +23,6 @@ export default new Router({
             breadcrumb: 'Watson Service',
           },
         },
-        {
-          path: '/file-upload',
-          name: 'upload',
-          component: Upload,
-          meta: {
-            breadcrumb: 'Upload Questions',
-          },
-        },
-        {
-          path: '/create-question',
-          name: 'create-question',
-          component: NewQuestion,
-          meta: {
-            breadcrumb: 'Create Questions',
-          },
-        },
       ],
     },
     { path: '*', component: PageNotFound },
