@@ -1,5 +1,10 @@
 <template>
   <div class="my-container">
+    <div class="about-us" style="margin-top: 10%">
+      <AboutUs
+      style="width: 85%; margin: auto;"
+      />
+    </div>
     <div class="chat-box-out">
       <div class="chat-box-in">
         <div class="chat-box-top">
@@ -8,25 +13,21 @@
                style="color: #00CC33; font-size: 15px; padding: 2px"></i>Bam Bam
           </h5>
         </div>
-        <div class="chat-box">
+        <div class="chat-box" ref="container">
           <div class="chat-box-watson">
             <i class="mdi mdi-dots-vertical"></i>
             <span class="watson">
               Hello there, I'm Bam Bam.
             </span>
           </div>
-          <div class="chat-box-user">
-            <span class="user">I neep your help please.</span>
-          </div>
-          <div class="chat-box-user">
-            <span class="user" v-if="userMessage !== ''">{{ userMessage }}</span>
-          </div>
-          <div class="chat-box-watson" v-if="watsonReply !== ''">
-            <i class="mdi mdi-dots-vertical"></i>
-            <span class="watson">
-              {{ watsonReply }}
-            </span>
-          </div>
+          <UserSide
+                  v-if="currentUserMessage"
+                  v-bind:current-user-message="currentUserMessage"
+          />
+          <WatsonSide
+                  v-if="watsonSide"
+                  v-bind:watson-message="watsonReply"
+          />
         </div>
         <div class="chat-box-bottom">
           <form v-on:submit.prevent="sendMessage()">
@@ -45,41 +46,66 @@
         </div>
       </div>
     </div>
+    <div class="quick-reply">
+      <h5 style="text-align: center">Quick Actions</h5>
+      <hr style="border-color: white">
+      <br>
+      <QuickAction v-for="(action, actionKey) in quickAction" :key="actionKey"
+              v-bind:action="action"
+              v-bind:text="action"
+      />
+      <!--<v-btn dark color="#00CC33" @click="changeMode()"-->
+             <!--style="width: 84%; margin-left: 8%; margin-right: 8%">Night Mode</v-btn>-->
+    </div>
   </div>
 </template>
 
 <script>
 import io from 'socket.io-client';
+import Vue from 'vue';
+import UserSide from '../components/UserSide.vue';
+import WatsonSide from '../components/WatsonSide.vue';
+import AboutUs from '../components/About-Us.vue';
+import QuickAction from '../components/QuickAction.vue';
 
 export default {
   name: 'WatsonService',
   mounted() {
+    /* eslint-env jquery */
     this.getWatsonService();
+  },
+  components: {
+    UserSide,
+    WatsonSide,
+    AboutUs,
+    QuickAction,
   },
   data() {
     return {
-      userMessage: '',
+      userMessage: [],
       getUserMessage: '',
+      currentUserMessage: '',
       getServiceReply: '#8c9eff',
       loader: false,
-      watsonReply: '',
+      watsonReply: 'yeah I\'m here',
+      watsonSide: '',
       socketObj: {},
+      userConversation: [],
       nightMode: true,
+      quickAction: [
+        'Check School Fees', 'Get Directions', 'Admissions', 'POST UTME', 'FAQs',
+      ],
     };
   },
   methods: {
-    sendMessage() {
-      this.socketObj.emit('chat message', this.getUserMessage);
-      this.getServiceReply = false;
-      this.loader = true;
-      this.userMessage = this.getUserMessage;
-      this.getUserMessage = '';
-      this.getResponse();
-    },
+    // changeMode() {
+    //   alert('heyyy');
+    // },
     async getWatsonService() {
       this.socketObj = await io('http://localhost:5000/');
       this.socketObj.on('connect', () => {
         console.log('user connected');
+        this.getResponse();
       });
       this.socketObj.on('disconnect', () => {
         console.log('user disconnected');
@@ -87,10 +113,32 @@ export default {
       const handle = 'Hello World from client';
       this.socketObj.emit('join', { handle });
     },
+    sendMessage() {
+      this.socketObj.emit('chat message', this.getUserMessage);
+      this.getServiceReply = false;
+      this.loader = true;
+      // this.userMessage.push(this.getUserMessage);
+      // this.currentUserMessage = this.getUserMessage;
+      const ComponentClass = Vue.extend(UserSide);
+      const instance = new ComponentClass({
+        propsData: { currentUserMessage: this.getUserMessage },
+      });
+      instance.$mount();
+      this.$refs.container.appendChild(instance.$el);
+      this.getUserMessage = '';
+    },
     getResponse() {
       this.socketObj.on('chat message', async (data) => {
-        console.log(JSON.parse(data).output.generic[0].text);
+        console.log(JSON.parse(data).output);
+        this.watsonReply = '';
         this.watsonReply = await JSON.parse(data).output.generic[0].text;
+        const ComponentClass = Vue.extend(WatsonSide);
+        const instance = new ComponentClass({
+          propsData: { watsonMessage: this.watsonReply },
+        });
+        instance.$mount();
+        this.$refs.container.appendChild(instance.$el);
+        // this.userConversation.push({ watson: this.watsonReply, user: this.currentUserMessage });
         this.getServiceReply = await true;
         this.loader = await false;
       });
@@ -100,17 +148,28 @@ export default {
 </script>
 
 <style scoped>
+  .about-us {
+    width: 25%;
+    float: left;
+  }
   .chat-box-out {
+    float: left;
     width: 55%;
-    margin: auto;
+    /*margin: auto;*/
     background-color: #101010;
     min-height: 85vh;
     max-height: 85vh;
     border-radius: 8px;
-    /*box-shadow: 2px 8px 2px 2px #181818;*/
+    margin-top: 40px;
+  }
+  .quick-reply {
+    width: 20%;
+    padding: 15px;
+    float: left;
+    margin-top: 10%;
   }
   .chat-box-in {
-    margin-top: 40px;
+    /*margin-top: 40px;*/
     position: relative;
   }
   .chat-box-top {
@@ -171,8 +230,20 @@ export default {
     margin: auto;
   }
   @media only screen and (max-width: 1190px) {
+    .about-us {
+      display: none;
+    }
+    .quick-reply {
+      display: none;
+    }
     .chat-box-out {
       width: 65%;
+      float: none;
+      margin: auto;
+    }
+    .chat-box-in {
+      margin-top: 40px;
+      /*position: relative;*/
     }
     .chat-box-watson {
       width: 75%;
@@ -184,6 +255,7 @@ export default {
   @media only screen and (max-width: 1015px) {
     .chat-box-out {
       width: 85%;
+      margin: auto;
     }
     .chat-box-watson {
       width: 80%;
@@ -195,6 +267,7 @@ export default {
   @media only screen and (max-width: 675px) {
     .chat-box-out {
       width: 95%;
+      margin: auto;
     }
     .chat-box-watson {
       width: 82%;
@@ -216,6 +289,10 @@ export default {
     }
   }
   @media only screen and (min-width: 295px) and (max-width: 444px) {
+    .chat-box-out {
+      width: 95%;
+      margin: 2.5%;
+    }
     .chat-box-watson {
       width: 87%;
     }
