@@ -1,6 +1,7 @@
 <template>
     <div class="text-center ma-2 quick-reply-button">
-        <v-btn dark color="#00CC33" @click="snackbar = true">{{ action }}</v-btn>
+        <!--<v-btn dark color="#00CC33" @click="snackbar = true">{{ action }}</v-btn>-->
+        <v-btn dark color="#00CC33" @click="getQuickReply">{{ action }}</v-btn>
         <v-snackbar
                 v-model="snackbar"
         >
@@ -8,7 +9,7 @@
             <v-btn
                     color="pink"
                     text
-                    @click="snackbar = false"
+                    @click="closeSnackBar"
             >
                 Close
             </v-btn>
@@ -25,6 +26,20 @@ export default {
   props: [
     'action', 'text',
   ],
+  methods: {
+    getQuickReply() {
+      this.snackbar = false;
+      this.snackbar = true;
+      setTimeout(function closeBar() {
+        this.snackbar = false;
+      }, 2000);
+      // this.$emit('clicked', 'someValue');
+      this.$emit('get-quick-reply');
+    },
+    closeSnackBar() {
+      this.snackbar = false;
+    },
+  },
 };
 </script>
 <style>

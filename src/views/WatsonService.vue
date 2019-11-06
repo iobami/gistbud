@@ -53,6 +53,7 @@
       <QuickAction v-for="(action, actionKey) in quickAction" :key="actionKey"
               v-bind:action="action"
               v-bind:text="action"
+              v-on:get-quick-reply="getQuickReply(action)"
       />
       <!--<v-btn dark color="#00CC33" @click="changeMode()"-->
              <!--style="width: 84%; margin-left: 8%; margin-right: 8%">Night Mode</v-btn>-->
@@ -101,6 +102,14 @@ export default {
     // changeMode() {
     //   alert('heyyy');
     // },
+    getQuickReply(value) {
+      const ComponentClass = Vue.extend(UserSide);
+      const instance = new ComponentClass({
+        propsData: { currentUserMessage: value },
+      });
+      instance.$mount();
+      this.$refs.container.appendChild(instance.$el);
+    },
     async getWatsonService() {
       this.socketObj = await io('http://localhost:5000/');
       this.socketObj.on('connect', () => {

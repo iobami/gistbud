@@ -8,31 +8,31 @@
                 height="200px"
                 src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
         >
-            <v-card-title>Top 10 Australian beaches</v-card-title>
+            <v-card-title>We are here to help</v-card-title>
         </v-img>
 
         <!--<v-card-subtitle class="pb-0">Number 10</v-card-subtitle>-->
 
         <v-card-text class="text--primary">
-            <div>Whitehaven Beach</div>
+            <div>Bam Bam is a virtual assistant.</div>
 
-            <div>Whitsunday Island, Whitsunday Islands</div>
+            <div>It can help with several things. Hit the quick reply button.</div>
         </v-card-text>
 
         <v-card-actions>
             <v-btn
-                    color="orange"
+                    color="blue"
                     text
             >
-                Share
+                <i class="mdi mdi-facebook"></i> | Hit me up
             </v-btn>
 
-            <v-btn
-                    color="orange"
-                    text
-            >
-                Explore
-            </v-btn>
+            <!--<v-btn-->
+                    <!--color="orange"-->
+                    <!--text-->
+            <!--&gt;-->
+                <!--Explore-->
+            <!--</v-btn>-->
         </v-card-actions>
     </v-card>
 </template>
