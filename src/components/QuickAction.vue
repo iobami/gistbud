@@ -1,7 +1,7 @@
 <template>
     <div class="text-center ma-2 quick-reply-button">
         <!--<v-btn dark color="#00CC33" @click="snackbar = true">{{ action }}</v-btn>-->
-        <v-btn dark color="#00CC33" @click="getQuickReply">{{ action }}</v-btn>
+        <v-btn dark color="#00CC33" :disabled="loader" @click="getQuickReply">{{ action }}</v-btn>
         <v-snackbar
                 v-model="snackbar"
         >
@@ -24,7 +24,7 @@ export default {
     };
   },
   props: [
-    'action', 'text',
+    'action', 'text', 'loader',
   ],
   methods: {
     getQuickReply() {
