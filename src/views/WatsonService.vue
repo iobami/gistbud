@@ -51,6 +51,7 @@
       <hr style="border-color: white">
       <br>
       <QuickAction v-for="(action, actionKey) in quickAction" :key="actionKey"
+              v-bind:loader="loader"
               v-bind:action="action"
               v-bind:text="action"
               v-on:get-quick-reply="getQuickReply(action)"
@@ -94,7 +95,7 @@ export default {
       userConversation: [],
       nightMode: true,
       quickAction: [
-        'Check School Fees', 'Get Directions', 'Admissions', 'POST UTME', 'FAQs',
+        'Check school fees', 'Get directions', 'Admissions', 'Post UTME', 'FAQs',
       ],
     };
   },
@@ -103,12 +104,10 @@ export default {
     //   alert('heyyy');
     // },
     getQuickReply(value) {
-      const ComponentClass = Vue.extend(UserSide);
-      const instance = new ComponentClass({
-        propsData: { currentUserMessage: value },
-      });
-      instance.$mount();
-      this.$refs.container.appendChild(instance.$el);
+      this.userSide(value);
+      this.socketObj.emit('chat message', value);
+      this.getServiceReply = false;
+      this.loader = true;
     },
     async getWatsonService() {
       this.socketObj = await io('http://localhost:5000/');
@@ -126,14 +125,7 @@ export default {
       this.socketObj.emit('chat message', this.getUserMessage);
       this.getServiceReply = false;
       this.loader = true;
-      // this.userMessage.push(this.getUserMessage);
-      // this.currentUserMessage = this.getUserMessage;
-      const ComponentClass = Vue.extend(UserSide);
-      const instance = new ComponentClass({
-        propsData: { currentUserMessage: this.getUserMessage },
-      });
-      instance.$mount();
-      this.$refs.container.appendChild(instance.$el);
+      this.userSide(this.getUserMessage);
       this.getUserMessage = '';
     },
     getResponse() {
@@ -141,16 +133,27 @@ export default {
         console.log(JSON.parse(data).output);
         this.watsonReply = '';
         this.watsonReply = await JSON.parse(data).output.generic[0].text;
-        const ComponentClass = Vue.extend(WatsonSide);
-        const instance = new ComponentClass({
-          propsData: { watsonMessage: this.watsonReply },
-        });
-        instance.$mount();
-        this.$refs.container.appendChild(instance.$el);
+        this.serviceSide(this.watsonReply);
         // this.userConversation.push({ watson: this.watsonReply, user: this.currentUserMessage });
         this.getServiceReply = await true;
         this.loader = await false;
       });
+    },
+    userSide(message) {
+      const ComponentClass = Vue.extend(UserSide);
+      const instance = new ComponentClass({
+        propsData: { currentUserMessage: message },
+      });
+      instance.$mount();
+      this.$refs.container.appendChild(instance.$el);
+    },
+    serviceSide(serviceReply) {
+      const ComponentClass = Vue.extend(WatsonSide);
+      const instance = new ComponentClass({
+        propsData: { watsonMessage: serviceReply },
+      });
+      instance.$mount();
+      this.$refs.container.appendChild(instance.$el);
     },
   },
 };
