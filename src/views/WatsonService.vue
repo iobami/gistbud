@@ -17,7 +17,7 @@
           <div class="chat-box-watson">
             <i class="mdi mdi-dots-vertical"></i>
             <span class="watson">
-              Hello there, I'm Bam Bam.
+              Hello there, I'm Bam Bam. How can I help you today?
             </span>
           </div>
           <UserSide
@@ -32,6 +32,7 @@
         <div class="chat-box-bottom">
           <form v-on:submit.prevent="sendMessage()">
             <v-text-field
+                    v-if="!getDirection"
                     color="#00CC33"
                     label=""
                     :dark=nightMode
@@ -41,6 +42,16 @@
                     :loading=!getServiceReply
                     placeholder="Type here..."
                     v-model="getUserMessage"
+            ></v-text-field>
+            <v-text-field
+                    v-if="getDirection"
+                    color="#00CC33"
+                    :dark=nightMode
+                    autofocus
+                    placeholder="Type here..."
+                    v-model="getUserMessage"
+                    id="pac-input"
+                    class="controls"
             ></v-text-field>
           </form>
         </div>
@@ -65,6 +76,7 @@
 <script>
 import io from 'socket.io-client';
 import Vue from 'vue';
+import gmapsInit from '../utils/gmaps';
 import UserSide from '../components/UserSide.vue';
 import WatsonSide from '../components/WatsonSide.vue';
 import AboutUs from '../components/About-Us.vue';
@@ -72,9 +84,27 @@ import QuickAction from '../components/QuickAction.vue';
 
 export default {
   name: 'WatsonService',
-  mounted() {
+  async mounted() {
     /* eslint-env jquery */
     this.getWatsonService();
+    this.initMap();
+    try {
+      // const google = await gmapsInit();
+
+      // To get user location
+      // if (navigator.geolocation) {
+      //   navigator.geolocation.getCurrentPosition((p) => {
+      //     const LatLng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+      //
+      //     // Set the map center on user location
+      //     console.log(p.coords.latitude, p.coords.longitude);
+      //   });
+      // } else {
+      //   alert('Geo Location feature is not supported in this browser.');
+      // }
+    } catch (e) {
+      console.log(e);
+    }
   },
   components: {
     UserSide,
@@ -89,6 +119,7 @@ export default {
       currentUserMessage: '',
       getServiceReply: '#8c9eff',
       loader: false,
+      getDirection: false,
       watsonReply: 'yeah I\'m here',
       watsonSide: '',
       socketObj: {},
@@ -103,6 +134,25 @@ export default {
     // changeMode() {
     //   alert('heyyy');
     // },
+    async initMap() {
+      const google = await gmapsInit();
+      console.log(google);
+      // const sydney = new google.maps.LatLng(-33.867, 151.195);
+      const defaultBounds = new google.maps.LatLngBounds(
+        new google.maps.LatLng(9.081999, 8.675277),
+        new google.maps.LatLng(9.091999, 8.775277),
+      );
+
+      const options = {
+        bounds: defaultBounds,
+      };
+
+      const input = document.getElementById('pac-input');
+      // map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+      const autocomplete = new google.maps.places.Autocomplete(input, options);
+      console.log(autocomplete);
+    },
     getQuickReply(value) {
       this.userSide(value);
       this.socketObj.emit('chat message', value);
@@ -110,7 +160,7 @@ export default {
       this.loader = true;
     },
     async getWatsonService() {
-      this.socketObj = await io('http://localhost:5000/');
+      this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
       this.socketObj.on('connect', () => {
         console.log('user connected');
         this.getResponse();
@@ -130,10 +180,12 @@ export default {
     },
     getResponse() {
       this.socketObj.on('chat message', async (data) => {
-        console.log(JSON.parse(data).output);
         this.watsonReply = '';
         this.watsonReply = await JSON.parse(data).output.generic[0].text;
-        this.serviceSide(this.watsonReply);
+        const watsonGenericReply = await JSON.parse(data).output.generic;
+        watsonGenericReply.forEach((generic) => {
+          this.serviceSide(generic.text);
+        });
         // this.userConversation.push({ watson: this.watsonReply, user: this.currentUserMessage });
         this.getServiceReply = await true;
         this.loader = await false;
