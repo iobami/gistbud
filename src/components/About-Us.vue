@@ -6,7 +6,7 @@
         <v-img
                 class="white--text align-end"
                 height="200px"
-                src="https://cdn.vuetifyjs.com/images/cards/docks.jpg"
+                src="../assets/images/ui-background.jpeg"
         >
             <v-card-title>We are here to help</v-card-title>
         </v-img>

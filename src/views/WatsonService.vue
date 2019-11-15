@@ -28,6 +28,11 @@
                   v-if="watsonSide"
                   v-bind:watson-message="watsonReply"
           />
+          <WatsonOption
+                v-if="showOptions"
+                v-bind:option-value="options"
+                v-on:get-option-value="getOptionValue"
+          />
         </div>
         <div class="chat-box-bottom">
           <form v-on:submit.prevent="sendMessage()">
@@ -81,6 +86,7 @@ import UserSide from '../components/UserSide.vue';
 import WatsonSide from '../components/WatsonSide.vue';
 import AboutUs from '../components/About-Us.vue';
 import QuickAction from '../components/QuickAction.vue';
+import WatsonOption from '../components/WatsonOption.vue';
 
 export default {
   name: 'WatsonService',
@@ -111,6 +117,7 @@ export default {
     WatsonSide,
     AboutUs,
     QuickAction,
+    WatsonOption,
   },
   data() {
     return {
@@ -124,6 +131,18 @@ export default {
       watsonSide: '',
       socketObj: {},
       userConversation: [],
+      options: [
+        { label: 'Mad oo' },
+        { label: 'Lad oo' },
+        { label: 'Pad oo' },
+        { label: 'Mad oo' },
+        { label: 'Lad oo' },
+        { label: 'Pad oo' },
+        { label: 'Mad oo' },
+        { label: 'Lad oo' },
+        { label: 'Pad oo' },
+      ],
+      showOptions: false,
       nightMode: true,
       quickAction: [
         'Check school fees', 'Get directions', 'Admissions', 'Post UTME', 'FAQs',
@@ -161,6 +180,7 @@ export default {
     },
     async getWatsonService() {
       this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
+      // this.socketObj = await io('http://localhost:5001/');
       this.socketObj.on('connect', () => {
         console.log('user connected');
         this.getResponse();
@@ -181,10 +201,16 @@ export default {
     getResponse() {
       this.socketObj.on('chat message', async (data) => {
         this.watsonReply = '';
+        this.options = [];
         this.watsonReply = await JSON.parse(data).output.generic[0].text;
         const watsonGenericReply = await JSON.parse(data).output.generic;
         watsonGenericReply.forEach((generic) => {
-          this.serviceSide(generic.text);
+          if (generic.response_type === 'text') {
+            this.serviceSide(generic.text);
+          } else if (generic.response_type === 'option') {
+            this.showOptions = true;
+            this.options = generic.options;
+          }
         });
         // this.userConversation.push({ watson: this.watsonReply, user: this.currentUserMessage });
         this.getServiceReply = await true;
@@ -206,6 +232,13 @@ export default {
       });
       instance.$mount();
       this.$refs.container.appendChild(instance.$el);
+    },
+    getOptionValue(option) {
+      this.showOptions = false;
+      this.socketObj.emit('chat message', option);
+      this.userSide(option);
+      this.getServiceReply = false;
+      this.loader = true;
     },
   },
 };
@@ -235,6 +268,7 @@ export default {
   .chat-box-in {
     /*margin-top: 40px;*/
     position: relative;
+    z-index: 1;
   }
   .chat-box-top {
     padding: 12px 12px 10px 24px;
