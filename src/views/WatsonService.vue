@@ -131,17 +131,7 @@ export default {
       watsonSide: '',
       socketObj: {},
       userConversation: [],
-      options: [
-        { label: 'Mad oo' },
-        { label: 'Lad oo' },
-        { label: 'Pad oo' },
-        { label: 'Mad oo' },
-        { label: 'Lad oo' },
-        { label: 'Pad oo' },
-        { label: 'Mad oo' },
-        { label: 'Lad oo' },
-        { label: 'Pad oo' },
-      ],
+      options: [],
       showOptions: false,
       nightMode: true,
       quickAction: [
@@ -181,7 +171,7 @@ export default {
     async getWatsonService() {
       this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
       // this.socketObj = await io('http://localhost:5001/');
-      this.socketObj.on('connect', () => {
+      this.socketObj.once('connect', () => {
         console.log('user connected');
         this.getResponse();
       });
