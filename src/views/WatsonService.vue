@@ -352,6 +352,15 @@ export default {
       width: 80%;
     }
   }
+  @media only screen and (max-width: 765px) {
+    .chat-box-out {
+      width: 95%;
+      margin: auto;
+    }
+    .chat-box-watson {
+      width: 88%;
+    }
+  }
   @media only screen and (max-width: 675px) {
     .chat-box-out {
       width: 95%;
@@ -359,6 +368,10 @@ export default {
     }
     .chat-box-watson {
       width: 82%;
+    }
+    .chat-box .watson {
+      margin: 6px;
+      width: 90%;
     }
     .chat-box-user {
       width: 82%;
