@@ -171,8 +171,8 @@ export default {
       element.scrollTop = element.scrollHeight;
     },
     async getWatsonService() {
-      // this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
-      this.socketObj = await io('http://localhost:5001/');
+      this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
+      // this.socketObj = await io('http://localhost:5001/');
       this.socketObj.once('connect', () => {
         console.log('user connected');
         this.getResponse();
