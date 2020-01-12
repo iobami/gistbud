@@ -13,7 +13,7 @@
                style="color: #00CC33; font-size: 15px; padding: 2px"></i>Bam Bam
           </h5>
         </div>
-        <div class="chat-box" ref="container">
+        <div id="chat-box" class="chat-box" ref="container">
           <div class="chat-box-watson">
             <i class="mdi mdi-dots-vertical"></i>
             <span class="watson">
@@ -167,10 +167,12 @@ export default {
       this.socketObj.emit('chat message', value);
       this.getServiceReply = false;
       this.loader = true;
+      const element = document.getElementById('chat-box');
+      element.scrollTop = element.scrollHeight;
     },
     async getWatsonService() {
-      this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
-      // this.socketObj = await io('http://localhost:5001/');
+      // this.socketObj = await io('https://ui-bot-1.herokuapp.com/');
+      this.socketObj = await io('http://localhost:5001/');
       this.socketObj.once('connect', () => {
         console.log('user connected');
         this.getResponse();
@@ -187,6 +189,8 @@ export default {
       this.loader = true;
       this.userSide(this.getUserMessage);
       this.getUserMessage = '';
+      const element = document.getElementById('chat-box');
+      element.scrollTop = element.scrollHeight;
     },
     getResponse() {
       this.socketObj.on('chat message', async (data) => {
@@ -205,6 +209,8 @@ export default {
         // this.userConversation.push({ watson: this.watsonReply, user: this.currentUserMessage });
         this.getServiceReply = await true;
         this.loader = await false;
+        const element = document.getElementById('chat-box');
+        element.scrollTop = element.scrollHeight;
       });
     },
     userSide(message) {
@@ -229,6 +235,8 @@ export default {
       this.userSide(option);
       this.getServiceReply = false;
       this.loader = true;
+      const element = document.getElementById('chat-box');
+      element.scrollTop = element.scrollHeight;
     },
   },
 };

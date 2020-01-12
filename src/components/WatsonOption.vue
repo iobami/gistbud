@@ -49,7 +49,7 @@ export default {
         height: 47px;
         width: 100%;
         overflow: hidden;
-        margin-bottom: -10px;
+        margin-bottom: -30px;
     }
     .options-container {
         width: 100%;
@@ -57,5 +57,6 @@ export default {
         bottom: 0;
         position: absolute;
         padding: 0 51px 0 0;
+        margin-top: 12px;
     }
 </style>
