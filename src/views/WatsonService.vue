@@ -135,7 +135,8 @@ export default {
       showOptions: false,
       nightMode: true,
       quickAction: [
-        'Check school fees', 'Get directions', 'Admissions', 'Post UTME', 'FAQs',
+        // 'Check school fees', 'Get directions', 'Admissions', 'Post UTME', 'FAQs',
+        'Check school fees', 'Admissions', 'Post UTME', 'FAQs',
       ],
     };
   },
@@ -166,6 +167,7 @@ export default {
       this.userSide(value);
       this.socketObj.emit('chat message', value);
       this.getServiceReply = false;
+      this.showOptions = false;
       this.loader = true;
       const element = document.getElementById('chat-box');
       element.scrollTop = element.scrollHeight;
@@ -186,6 +188,7 @@ export default {
     sendMessage() {
       this.socketObj.emit('chat message', this.getUserMessage);
       this.getServiceReply = false;
+      this.showOptions = false;
       this.loader = true;
       this.userSide(this.getUserMessage);
       this.getUserMessage = '';
