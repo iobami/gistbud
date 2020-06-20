@@ -10,9 +10,9 @@
                         color="#00CC33"
                         v-for="(optionValue, optionsKey) in optionsArray"
                         :key="optionsKey"
-                        @click="getOptionValue(optionValue.label)"
+                        @click="getOptionValue(optionValue.text)"
                         style="margin-right: 5px"
-                >{{ optionValue.label }}</v-btn>
+                >{{ optionValue.text }}</v-btn>
             </div>
         </div>
     </div>

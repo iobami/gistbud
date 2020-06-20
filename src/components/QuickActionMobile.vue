@@ -1,7 +1,8 @@
 <template>
-    <div class="text-center ma-2 quick-reply-button">
+    <div class="text-center ma-2 quick-reply-button-mobile">
         <!--<v-btn dark color="#00CC33" @click="snackbar = true">{{ action }}</v-btn>-->
-        <v-btn dark color="#00CC33" :disabled="loader" @click="getQuickReply">{{ action }}</v-btn>
+        <v-btn dark color="#00CC33" small
+               :disabled="loader" @click="getQuickReply">{{ action }}</v-btn>
         <v-snackbar
                 v-model="snackbar"
         >
@@ -43,16 +44,13 @@ export default {
 };
 </script>
 <style>
-    .quick-reply-button button {
+    .quick-reply-button-mobile button {
         width: 90%;
         margin-left: 5%;
         margin-right: 5%;
+        font-size: 12px;
     }
-
-    .fade-enter-active, .fade-leave-active {
-        transition: opacity .8s;
-    }
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
-        opacity: 0;
+    .quick-reply-button-mobile button .v-btn__content {
+        font-size: 12px;
     }
 </style>

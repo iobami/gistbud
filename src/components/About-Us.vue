@@ -6,26 +6,26 @@
         <v-img
                 class="white--text align-end"
                 height="200px"
-                src="../assets/images/ui-background.jpeg"
+                src="../assets/images/bg.jpg"
         >
-            <v-card-title>We are here to help</v-card-title>
+            <v-card-title>Let me tell you a joke</v-card-title>
         </v-img>
 
         <!--<v-card-subtitle class="pb-0">Number 10</v-card-subtitle>-->
 
         <v-card-text class="text--primary">
-            <div>Bam Bam is a virtual assistant.</div>
+            <div>The Bot is a virtual assistant.</div>
 
             <div>It can help with several things. Hit the quick reply button.</div>
         </v-card-text>
 
         <v-card-actions>
-            <v-btn
-                    color="blue"
-                    text
-            >
-                <i class="mdi mdi-facebook"></i> | Hit me up
-            </v-btn>
+            <!--<v-btn-->
+                    <!--color="blue"-->
+                    <!--text-->
+            <!--&gt;-->
+                <!--<i class="mdi mdi-facebook"></i> | Hit me up-->
+            <!--</v-btn>-->
 
             <!--<v-btn-->
                     <!--color="orange"-->
