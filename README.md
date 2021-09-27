@@ -1,4 +1,4 @@
-# qui
+# feeds
 
 ## Project setup
 ```
